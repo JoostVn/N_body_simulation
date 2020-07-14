@@ -1,5 +1,4 @@
 import time
-from Color import Color
 
 
 class Ticker:

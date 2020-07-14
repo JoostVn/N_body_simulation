@@ -13,6 +13,10 @@ class Color:
     GOLD = (240, 190, 50)
     
     def random_vibrant():
+        """
+        Returns a random vibrant color in RGB format. Works by forcing a 
+        large enough difference between the R, G, and B values.
+        """
         while True:
             R, G, B = sample(range(0,256), 3)
             diff_sum = abs(R-G) + abs(G-B) + abs(R-B)
@@ -20,6 +24,10 @@ class Color:
                 return (R, G, B)
             
     def random_dull():
+        """
+        Returns a random dull color in RGB format. Works by forcing the RGB 
+        difference to be between two values.
+        """
         while True:
             R, G, B = sample(range(0,256), 3)
             diff_sum = abs(R-G) + abs(G-B) + abs(R-B)
@@ -30,6 +38,11 @@ class Color:
             
 
 class ColorGradient:
+    """
+    A color gradient object contains two colors, and the number of partitions
+    for the desired color gradient. The get_color function returns a color
+    that is 'between' the color1 and color2 at the given partition.
+    """
     
     def __init__(self, color_1, color_2, nr_partitions):
         self.c1 = color_1

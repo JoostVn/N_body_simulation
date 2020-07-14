@@ -38,10 +38,17 @@ class Body:
         self.f[0], self.f[1] = sum(Fx), sum(Fy)
         
     def update_velocity(self):
+        """
+        Updates the particles' velocity based on the current net force, 
+        divided by its mass.
+        """
         self.v[0] += self.f[0] / self.m
         self.v[1] += self.f[1] / self.m
     
     def update_position(self):
+        """
+        Offsets the current position with the current velocity.
+        """
         self.p[0] += self.v[0]
         self.p[1] += self.v[1]
     
@@ -58,7 +65,7 @@ class Body:
                 x_a, y_a = self.p[0], self.p[1]
                 x_b, y_b = b.p[0], b.p[1]
                 distance = ((x_a - x_b)**2 + (y_a - y_b)**2) ** (1/2)
-                if distance < 0.8 * self.rad:
+                if distance < self.rad:
                     ratio = self.m / (self.m + b.m)
                     self.v[0] = ratio * self.v[0] + (1-ratio) * b.v[0]
                     self.v[1] = ratio * self.v[1] + (1-ratio) * b.v[1]
@@ -88,7 +95,7 @@ class Body:
         """
         Appends the current position to the trail list.  Also 
         removes segments after lines become too long to reduce computational 
-        load. Optionally scrambles the tail for a visual effect
+        load, according to the self.trail_size parameter.
         """
         self.prev_positions.append((int(self.p[0]),int(self.p[1])))
         if len(self.prev_positions) > self.trail_size:
@@ -123,7 +130,8 @@ class Body:
 
 class Arrow(Body):
     """
-    Arrow shaped body
+    Arrow shaped body, usefull to create a visual indication of a particles'
+    velocity.
     """
 
     def __init__(self, position, mass, color, trail_color, velocity, trail_size):
@@ -151,7 +159,7 @@ class Arrow(Body):
     
 class Planet(Body):
     """
-    Spherical body
+    Spherical body, useful for representing planets or general particles.
     """
     
     def __init__(self, position, mass, color, trail_color, velocity, trail_size):
@@ -164,17 +172,6 @@ class Planet(Body):
     
     
     
-    
-class Particle(Body):
-    """
-    Body used for visual effects
-    """
-    
-    def __init__(self, position, mass, color, trail_color, velocity, trail_size):
-        super().__init__(position, mass, color, trail_color, velocity, trail_size) 
-        
-    def gradient_particle(self, color1, color2, velocity, randomness, duration):
-        pass
         
         
     

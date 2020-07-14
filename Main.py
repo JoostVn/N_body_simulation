@@ -26,7 +26,6 @@ class Window:
     drawn lines are passed.
     """
     
-    
     def __init__(self, window_x, window_y, background_colour):
         pygame.init() 
         self.window_x = 800
@@ -71,7 +70,8 @@ class Window:
         
     def pan(self, simulation):
         """
-        Pans the simulation screen using the left mouse button.
+        Pans the simulation screen using the left mouse button. The x and y
+        pan_offset is passed to all drawing functions.
         """
         initial_offset = self.pan_offset.copy() # Offset when panning is started
         pan_start = pygame.mouse.get_pos()      # Initial position of mouse
@@ -90,8 +90,8 @@ class Window:
     def mouse_draw(self, simulation):
         """
         Lets the user draw a line with their rigt mouse button. The line info
-        is then passed on the the simulation which can in turn interpret it
-        in different ways.
+        is then passed on the the simulation which can use it to create new
+        particles.
         """
         hold = True
         duration = 1    # Increases when the mouse is pressed longer
@@ -110,12 +110,16 @@ class Window:
             duration += 0.03
         
     def display_text(self, text, color, x, y):
-        """Draws one line of text on specified coordinates"""
+        """
+        Draws one line of text on specified coordinates
+        """
         textblock = self.font.render(text, True, color)
         self.screen.blit(textblock, (x,y))
     
     def display_textlist(self, text_list, color, x, y):
-        """Draws a list of text"""
+        """
+        Draws a list of text
+        """
         for line in text_list:  
             self.display_text(line, color, x, y)
             y += 15

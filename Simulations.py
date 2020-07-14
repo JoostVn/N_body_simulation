@@ -7,13 +7,20 @@ from math import atan2, pi, tan, sqrt, sin, cos
 class N_Body:
     """
     Simulation parent class. All other classes inherit all functionality from
-    this class, with the exception of different generate_bodies functions.
+    this class, with the exception of different generate_bodies functions,
+    which determines the actual bodies in the simulation. New simulations can
+    be added by just inhereting this class, and importing them to main.py.
     """
     
     def __init__(self, G):
         self.G = G
         
     def update_bodies(self, iteration):
+        """
+        Updates all bodies in the simulation by merging them, computing the 
+        net force, updating velocity and updating postions. The trail is not
+        updated every iteration to save computational load.
+        """
         for p in self.bodies:
             p.merge(self.bodies)  
             p.update_force(self.bodies, self.G)
@@ -23,6 +30,9 @@ class N_Body:
                 p.update_trail()
             
     def draw(self, screen, pan_offset, background_colour):
+        """
+        Draws the simulation bodies on the Pygame screen.
+        """
         for p in self.bodies:
             p.draw_trail(screen, pan_offset)
         for p in self.bodies:
@@ -45,6 +55,11 @@ class N_Body:
 
 
 class Random_sim(N_Body):
+    
+    """
+    Simple simulation with a number of random arrows, with little mass, and 
+    planets, with larger mass.
+    """
     
     def __init__(self, G):
         super().__init__(G)
@@ -77,6 +92,11 @@ class Random_sim(N_Body):
     
     
 class Solar_system(N_Body):
+    
+    """
+    Simulation with a central 'sun' and numerous planets rotating around it.
+    """
+    
     
     def __init__(self, G):
         super().__init__(G)
@@ -125,50 +145,6 @@ class Solar_system(N_Body):
         
 
 
-
-class Saved_system(N_Body):
-    
-    def __init__(self, G):
-        super().__init__(G)
-    
-    def generate_bodies(self):
-        self.bodies = []
-        
-        mid = [400, 400]
-        
-        # Creating sun
-        sun = Planet(position = mid, mass = 30000, color = Color.GOLD,                      
-                     trail_color = Color.MGREY, velocity = [0,0], trail_size = 50)
-        self.bodies.append(sun)
-
-        
-        # Two inverted planets
-        planets = []
-        directions = [1, -1]
-        for direction in directions:
-            x = mid[0]
-            y = mid[1] + direction * 400
-            vx = direction * 8
-            vy = 0
-            mass = 1000
-            p = Planet([x,y], mass, Color.DGREY, Color.MGREY, [vx,vy], 30)
-            planets.append(p)
-        self.bodies += planets
-        
-        # For each planet two moons
-        for p in planets:
-            directions = [1, -1]
-            for direction in directions:
-                x = p.p[0]
-                y = p.p[1] + direction * 15
-        
-                vx = p.v[0] + direction * 2.5
-                vy = 0
-                mass = 10
-                m = Planet([x,y], mass, Color.DGREY, Color.MGREY, [vx,vy], 30)
-                self.bodies.append(m)
-        
-        
 
 
 
