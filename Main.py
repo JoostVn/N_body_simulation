@@ -8,7 +8,6 @@ from Simulations import Random_sim, Solar_system
 """
 TODO:
     - Zooming function
-    - Rewriting oc strings
     - Drawer class that can draw and update figures based on a list of points and a rotation
     - Player controlled node with engine and particles
     - Saving simulation state with button
@@ -127,7 +126,7 @@ class Window:
 
 # Parameters
 x, y = 800, 800
-simtype = 1
+simtype = 2
 
 # Simulation types
 if simtype == 1:
