@@ -1,7 +1,7 @@
-from random import randint, uniform, choice
+from random import randint, uniform
 from Color import Color
 from Particle import Arrow, Planet
-from math import atan2, pi, tan, sqrt, sin, cos
+from math import sqrt
 
 
 class N_Body:

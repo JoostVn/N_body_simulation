@@ -2,7 +2,7 @@ import pygame
 import time
 from Color import Color
 from Ticker import Ticker
-from Simulations import Random_sim, Solar_system, Saved_system
+from Simulations import Random_sim, Solar_system
 
 
 """
@@ -138,9 +138,7 @@ elif simtype == 2:
     sim = Solar_system(G=0.001)
     sim.generate_bodies(nr_planets=100, max_pos=[x,y])
 
-elif simtype == 3:
-    sim = Saved_system(G=0.002)
-    sim.generate_bodies()
+
 
 
 # Running
