@@ -1,7 +1,7 @@
 from random import randint, uniform
 from Color import Color
-from Particle import Arrow, Planet
-from math import sqrt
+from Particle import Arrow, Planet, UserParticle
+from math import sqrt, sin, cos
 
 
 class N_Body:
@@ -38,7 +38,7 @@ class N_Body:
         for p in self.bodies:
             p.draw(screen, pan_offset)
 
-    def mouse_line(self, start_pos, end_pos, duration, pan_offset):
+    def user_drawn_particle(self, start_pos, end_pos, duration, pan_offset):
         """
         Function that can utilize a line drawn in the simulation. This line,
         as well as the duration of the mouse press are used to create a new
@@ -52,10 +52,25 @@ class N_Body:
         p = Planet([x,y], mass, Color.RED, Color.MGREY, [vx,vy], 20)
         self.bodies.append(p)
 
+    def arrowkey_rotation(self, direction):
+        """
+        Function can be overriden in simulations to rotate user controlled
+        particles
+        """
+        pass
+
+    def arrowkey_acceleration(self, force):
+        """
+        Function can be overriden in simulations to accelerate user controlled
+        particles
+        """
+        pass
+        
+
+
 
 
 class Random_sim(N_Body):
-    
     """
     Simple simulation with a number of random arrows, with little mass, and 
     planets, with larger mass.
@@ -90,13 +105,10 @@ class Random_sim(N_Body):
         
     
     
-    
 class Solar_system(N_Body):
-    
     """
     Simulation with a central 'sun' and numerous planets rotating around it.
     """
-    
     
     def __init__(self, G):
         super().__init__(G)
@@ -142,6 +154,44 @@ class Solar_system(N_Body):
             trail_size = 20
             p = Planet(position, mass, color, trail_color, velocity, trail_size)
             self.bodies.append(p)
+        
+
+
+
+
+class User_controlled(N_Body):
+    """
+    Simulation with a user controlled particle.
+    """
+    
+    def __init__(self, G):
+        super().__init__(G)
+    
+    def generate_bodies(self, max_pos):
+        self.bodies = []
+        
+        # Create user controlled particle
+        mid = [int(max_pos[0]/2), int(max_pos[1]/2)]
+        self.u = UserParticle(mid, 500, Color.NAVY, Color.NAVY, [0,0], 20)
+        self.bodies.append(self.u)
+
+    def arrowkey_rotation(self, direction):
+        """
+        Function can be overriden in simulations to rotate user controlled
+        particles
+        """
+        self.u.angle += 0.2 * direction
+
+    def arrowkey_acceleration(self, force):
+        """
+        Function can be overriden in simulations to accelerate user controlled
+        particles
+        """
+        normalized_x = cos(self.u.angle)
+        normalized_y = sin(self.u.angle)
+        self.u.v[0] += normalized_x * force
+        self.u.v[1] += normalized_y * force
+        
         
 
 

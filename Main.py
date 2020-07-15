@@ -2,7 +2,7 @@ import pygame
 import time
 from Color import Color
 from Ticker import Ticker
-from Simulations import Random_sim, Solar_system
+from Simulations import Random_sim, Solar_system, User_controlled
 
 
 """
@@ -39,17 +39,22 @@ class Window:
         """
         Pygame main loop. Uses the ticker class to create consistent timespaces
         between ticks. In the main loop: Updates simulation, checks events,
-        updats statistics on screen, draws screen en increments tick.
+        updats statistics on screen, draws screen en increments tick. 
         """
         running = True
         ticker = Ticker(start_time=time.time(), tick_len=1/30)
+        arrowkey_hold = {pygame.K_LEFT:False, pygame.K_RIGHT:False, pygame.K_UP:False}
+        
+        # Main loop
+        while running:  
 
-        while running:                          # Main loop
-            simulation.update_bodies(ticker.i)  # Update simulation
+            # Update simulation                       
+            simulation.update_bodies(ticker.i)  
             self.screen.fill(self.bg)
             simulation.draw(self.screen, self.pan_offset, self.bg)
             
-            for event in pygame.event.get():    # Check events
+            # Check events
+            for event in pygame.event.get():  
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type ==pygame.MOUSEBUTTONDOWN:
@@ -57,11 +62,28 @@ class Window:
                         self.pan(simulation)
                     if event.button == 3:
                         self.mouse_draw(simulation)
-            
-            stats = ticker.string_stats()       # Fetch screen tick stats
+                if event.type == pygame.KEYDOWN:
+                    if event.key in arrowkey_hold:
+                        arrowkey_hold[event.key] = True
+                if event.type == pygame.KEYUP:
+                    if event.key in arrowkey_hold:
+                        arrowkey_hold[event.key] = False
+                    
+            # Arrow key hold - for user controlled particle
+            if arrowkey_hold[pygame.K_LEFT]:
+                self.key_left(simulation)
+            if arrowkey_hold[pygame.K_RIGHT]:
+                self.key_right(simulation)
+            if arrowkey_hold[pygame.K_UP]:
+                self.key_up(simulation, 0.15)
+                        
+            # Tick load stats
+            stats = ticker.string_stats()       
             self.display_textlist(stats, Color.DGREY, 15, 5)
             bodies_text = f'nr_bodies : {len(simulation.bodies)}'
             self.display_text(bodies_text, Color.DGREY, 650, 5)
+            
+            # Screen display and next tick
             pygame.display.flip()               # Draw screen
             ticker.next_tick()                  # Incement tick
          
@@ -105,7 +127,7 @@ class Window:
             for event in pygame.event.get():    # check for mouse release
                 if event.type == pygame.MOUSEBUTTONUP:
                     hold = False
-                    simulation.mouse_line(start_pos, end_pos, duration, self.pan_offset)
+                    simulation.user_drawn_particle(start_pos, end_pos, duration, self.pan_offset)
             duration += 0.03
         
     def display_text(self, text, color, x, y):
@@ -123,21 +145,33 @@ class Window:
             self.display_text(line, color, x, y)
             y += 15
 
+    def key_left(self, simulation):
+        simulation.arrowkey_rotation(-1)
+    
+    def key_right(self, simulation):
+        simulation.arrowkey_rotation(1)
+    
+    def key_up(self, simulation, force):
+        simulation.arrowkey_acceleration(force)
+
+
 
 # Parameters
 x, y = 800, 800
-simtype = 2
+simtype = 3
 
 # Simulation types
 if simtype == 1:
     sim = Random_sim(G=0.001)
-    
     sim.generate_bodies(nr_planets=5, nr_particles=50, max_pos = [x,y])
+    
 elif simtype == 2:
     sim = Solar_system(G=0.001)
     sim.generate_bodies(nr_planets=60, max_pos=[x,y])
 
-
+elif simtype == 3:
+    sim = User_controlled(G=0.001)
+    sim.generate_bodies(max_pos=[x,y])
 
 
 # Running

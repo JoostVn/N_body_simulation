@@ -1,7 +1,7 @@
 import pygame
 from math import sin, cos, atan2
-from Color import Color, ColorGradient
-from random import uniform
+from Color import ColorGradient
+
 
 
 
@@ -172,10 +172,31 @@ class Planet(Body):
     
     
     
-        
-        
+class UserParticle(Body):
+    """
+    Arrow shaped body, usefull to create a visual indication of a particles'
+    velocity.
+    """
+
+    def __init__(self, position, mass, color, trail_color, velocity, trail_size):
+        super().__init__(position, mass, color, trail_color, velocity, trail_size) 
+        self.angle = 0
     
-    
-    
+    def draw(self, screen, pan_offset):
+        """
+        Draws an arrow on the particles' coordinates indicating its current
+        direction. The arrow is defined by X1, Y1 and Y2 which are multiplied
+        by the particles' radius.        
+        """
+        x = self.p[0] + pan_offset[0]
+        y = self.p[1] + pan_offset[1]
+        theta = self.angle
+        X1, Y1, Y2 = 0.6*self.rad, 1.6*self.rad, 0.3*self.rad
+        p_top = (int(x + Y1 * cos(theta)), int(y + Y1 * sin(theta)))
+        p_right = (int(x - X1 * sin(theta)), int(y + X1 * cos(theta)))
+        p_left = (int(x + X1 * sin(theta)), int(y - X1 * cos(theta)))
+        p_bottom = (int(x - Y2 * cos(theta)), int(y - Y2 * sin(theta)))
+        pointslist = (p_top, p_right, p_bottom, p_left)
+        pygame.draw.polygon(screen, self.color, pointslist)
     
     
