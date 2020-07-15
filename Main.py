@@ -135,7 +135,7 @@ if simtype == 1:
     sim.generate_bodies(nr_planets=5, nr_particles=50, max_pos = [x,y])
 elif simtype == 2:
     sim = Solar_system(G=0.001)
-    sim.generate_bodies(nr_planets=100, max_pos=[x,y])
+    sim.generate_bodies(nr_planets=60, max_pos=[x,y])
 
 
 

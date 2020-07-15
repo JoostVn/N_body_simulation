@@ -45,13 +45,12 @@ class Ticker:
         """
         Returns all current stats values as a list of printeable strings
         """        
-        stats_list = []
-        stats_list.append(f'avg_load: {self.avg_load}')
-        stats_list.append(f'max_load: {self.max_load}')
-        stats_list.append(f'min_load: {self.min_load}')
-        stats_list.append(f'run_time: {self.run_time}')
-        stats_list.append(f'iter_len: {self.iter_len}')
-        return stats_list
+        return [f'avg_load: {self.avg_load}',
+                f'max_load: {self.max_load}',
+                f'min_load: {self.min_load}',
+                f'run_time: {self.run_time}',
+                f'iter_len: {self.iter_len}']
+       
         
         
         
